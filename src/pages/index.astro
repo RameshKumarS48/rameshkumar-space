@@ -16,8 +16,8 @@ interface ProductCard {
 // Fetch subdomains from Cloudflare DNS at build time
 let cards: ProductCard[] = [];
 
-const zoneId = import.meta.env.CLOUDFLARE_ZONE_ID;
-const apiToken = import.meta.env.CLOUDFLARE_API_TOKEN;
+const zoneId = import.meta.env.CF_DNS_ZONE_ID;
+const apiToken = import.meta.env.CF_DNS_TOKEN;
 
 if (zoneId && apiToken) {
   const res = await fetch(
