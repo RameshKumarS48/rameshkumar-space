@@ -1,0 +1,178 @@
+---
+import { products, type ProductMeta } from "../data/products";
+import "../styles/global.css";
+
+interface DnsRecord {
+  type: string;
+  name: string;
+}
+
+interface ProductCard {
+  subdomain: string;
+  url: string;
+  meta: ProductMeta;
+}
+
+// Fetch subdomains from Cloudflare DNS at build time
+let cards: ProductCard[] = [];
+
+const zoneId = import.meta.env.CLOUDFLARE_ZONE_ID;
+const apiToken = import.meta.env.CLOUDFLARE_API_TOKEN;
+
+if (zoneId && apiToken) {
+  const res = await fetch(
+    `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records?per_page=100`,
+    { headers: { Authorization: `Bearer ${apiToken}` } }
+  );
+  const data = await res.json();
+
+  if (data.success) {
+    const seen = new Set<string>();
+    for (const record of data.result as DnsRecord[]) {
+      if (!["A", "CNAME", "AAAA"].includes(record.type)) continue;
+      if (record.name === "rameshkumar.space") continue;
+      if (!record.name.endsWith(".rameshkumar.space")) continue;
+
+      const subdomain = record.name.replace(".rameshkumar.space", "");
+      if (seen.has(subdomain)) continue;
+      seen.add(subdomain);
+
+      cards.push({
+        subdomain,
+        url: `https://${record.name}`,
+        meta: products[subdomain] ?? {
+          name: subdomain.charAt(0).toUpperCase() + subdomain.slice(1),
+          description: "A new product — description coming soon.",
+          status: "wip",
+          emoji: "🚀",
+        },
+      });
+    }
+  }
+} else {
+  // Fallback for local dev without env vars
+  cards = Object.entries(products).map(([subdomain, meta]) => ({
+    subdomain,
+    url: `https://${subdomain}.rameshkumar.space`,
+    meta,
+  }));
+}
+
+// Sort: live first, then alphabetical by name
+cards.sort((a, b) => {
+  if (a.meta.status === "live" && b.meta.status !== "live") return -1;
+  if (a.meta.status !== "live" && b.meta.status === "live") return 1;
+  return a.meta.name.localeCompare(b.meta.name);
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ramesh Kumar — Builder</title>
+    <meta name="description" content="Products and experiments built by Ramesh Kumar." />
+    <meta property="og:title" content="Ramesh Kumar — Builder" />
+    <meta property="og:description" content="A collection of products and experiments, all live at rameshkumar.space" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-[#0a0a0a] text-white min-h-screen font-[Inter,sans-serif]">
+
+    <!-- Header -->
+    <header class="max-w-5xl mx-auto px-6 pt-20 pb-16">
+      <div class="flex items-start justify-between flex-wrap gap-6">
+        <div>
+          <h1 class="text-3xl font-semibold tracking-tight text-white">Ramesh Kumar</h1>
+          <p class="mt-2 text-[#666] text-sm font-[JetBrains_Mono,monospace]">
+            builder · <span class="text-[#444]">rameshkumar.space</span>
+          </p>
+        </div>
+        <a
+          href="mailto:ramesh.kumar@zeno.earth"
+          class="text-sm font-mono text-[#444] hover:text-white transition-colors duration-150 mt-1"
+        >
+          contact
+        </a>
+      </div>
+
+      <p class="mt-8 text-[#666] text-base leading-relaxed max-w-xl">
+        A collection of products and experiments. Each one lives at its own subdomain — click to explore.
+      </p>
+
+      <div class="mt-8 h-px bg-[#1a1a1a]"></div>
+    </header>
+
+    <!-- Product Grid -->
+    <main class="max-w-5xl mx-auto px-6 pb-24">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {cards.map(({ subdomain, url, meta }) => (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group block bg-[#111] border border-[#1e1e1e] rounded-xl p-6 hover:border-[#2e2e2e] hover:bg-[#141414] transition-all duration-200"
+          >
+            <!-- Emoji + Status -->
+            <div class="flex items-start justify-between mb-4">
+              <span class="text-2xl">{meta.emoji ?? "🚀"}</span>
+              {meta.status && (
+                <span
+                  class={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border ${
+                    meta.status === "live"
+                      ? "text-emerald-400 border-emerald-400/30 bg-emerald-400/5"
+                      : meta.status === "beta"
+                      ? "text-amber-400 border-amber-400/30 bg-amber-400/5"
+                      : "text-[#444] border-[#2a2a2a]"
+                  }`}
+                >
+                  {meta.status}
+                </span>
+              )}
+            </div>
+
+            <!-- Name -->
+            <h2 class="text-[15px] font-semibold text-white mb-1 leading-snug">
+              {meta.name}
+            </h2>
+
+            <!-- Subdomain URL -->
+            <p class="text-[11px] font-mono text-[#333] mb-3 group-hover:text-[#4a4a4a] transition-colors">
+              {subdomain}.rameshkumar.space
+            </p>
+
+            <!-- Description -->
+            <p class="text-sm text-[#555] leading-relaxed group-hover:text-[#777] transition-colors duration-200">
+              {meta.description}
+            </p>
+
+            <!-- Arrow -->
+            <div class="mt-5 flex items-center gap-1 text-[#2a2a2a] group-hover:text-[#4a4a4a] transition-colors">
+              <span class="text-xs font-mono">open</span>
+              <span class="text-xs">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {cards.length === 0 && (
+        <div class="text-center py-24 text-[#333] font-mono text-sm">
+          no products found
+        </div>
+      )}
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-5xl mx-auto px-6 py-8 border-t border-[#111]">
+      <p class="text-[#2a2a2a] text-xs font-mono">
+        © {new Date().getFullYear()} rameshkumar.space
+      </p>
+    </footer>
+
+  </body>
+</html>
