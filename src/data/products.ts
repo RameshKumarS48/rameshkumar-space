@@ -50,4 +50,11 @@ export const products: Record<string, ProductMeta> = {
     emoji: "🤖",
     externalUrl: "https://aiagentautomation.site",
   },
+  resumetailor: {
+    name: "ResumeTailor",
+    description: "Chrome extension that tailors your resume to any job description in seconds — match keywords, reframe experience, and get past ATS filters.",
+    status: "beta",
+    emoji: "📝",
+    externalUrl: "https://resumetailor.xyz",
+  },
 };
