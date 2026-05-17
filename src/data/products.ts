@@ -3,6 +3,7 @@ export interface ProductMeta {
   description: string;
   status?: "live" | "beta" | "wip";
   emoji?: string;
+  externalUrl?: string;
 }
 
 export const products: Record<string, ProductMeta> = {
@@ -41,5 +42,12 @@ export const products: Record<string, ProductMeta> = {
     description: "28 free document tools — merge, split, compress, convert, sign, and protect PDFs, Word, Excel, and PowerPoint files. No login. No watermark. No catch.",
     status: "live",
     emoji: "📄",
+  },
+  aiagentautomation: {
+    name: "AI Agent Automation",
+    description: "The most comprehensive AI agents directory — 2,800+ tools across 310 categories, curated weekly. Find the right agent for any workflow.",
+    status: "live",
+    emoji: "🤖",
+    externalUrl: "https://aiagentautomation.site",
   },
 };
