@@ -36,4 +36,10 @@ export const products: Record<string, ProductMeta> = {
     status: "live",
     emoji: "📅",
   },
+  pulp: {
+    name: "Pulp",
+    description: "28 free document tools — merge, split, compress, convert, sign, and protect PDFs, Word, Excel, and PowerPoint files. No login. No watermark. No catch.",
+    status: "live",
+    emoji: "📄",
+  },
 };
