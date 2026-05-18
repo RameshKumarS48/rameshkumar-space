@@ -64,18 +64,18 @@ const totalCount = cards.length;
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #F8F6F2;
+      --bg:        #F5F5F3;
       --bg-card:   #FFFFFF;
-      --bg-hover:  #FDF2EE;
-      --ink:       #141412;
-      --ink-soft:  #4A4845;
-      --ink-muted: #9E9B96;
-      --accent:    #C84B2C;
-      --accent2:   #E8673E;
-      --border:    #E6E2DA;
-      --border-strong: #CEC9BF;
-      --shadow:    0 1px 3px rgba(20,20,18,.06), 0 4px 16px rgba(20,20,18,.06);
-      --shadow-lg: 0 8px 40px rgba(20,20,18,.12);
+      --bg-hover:  #ECECF8;
+      --ink:       #0C0C18;
+      --ink-soft:  #3A3A52;
+      --ink-muted: #888898;
+      --accent:    #4338CA;
+      --accent2:   #6366F1;
+      --border:    #DFDFE8;
+      --border-strong: #C2C2D8;
+      --shadow:    0 1px 3px rgba(12,12,24,.06), 0 4px 16px rgba(12,12,24,.06);
+      --shadow-lg: 0 8px 40px rgba(12,12,24,.12);
     }
 
     html { scroll-behavior: smooth; }
@@ -189,7 +189,7 @@ const totalCount = cards.length;
       font-size: clamp(120px, 18vw, 260px);
       font-weight: 800;
       color: transparent;
-      -webkit-text-stroke: 1px rgba(200,75,44,0.07);
+      -webkit-text-stroke: 1px rgba(67,56,202,0.06);
       white-space: nowrap;
       pointer-events: none;
       user-select: none;
@@ -265,14 +265,28 @@ const totalCount = cards.length;
       animation: fadeSlideUp 0.7s ease 0.9s forwards;
     }
 
-    .hero-tagline {
+    .hero-quote {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: clamp(20px, 2.5vw, 30px);
-      font-weight: 300;
+      font-size: clamp(15px, 1.7vw, 20px);
+      font-weight: 400;
       color: var(--ink-soft);
-      max-width: 520px;
-      line-height: 1.4;
+      max-width: 460px;
+      line-height: 1.65;
+      border-left: 2px solid var(--accent);
+      padding-left: 18px;
+      margin: 0;
+    }
+    .hero-quote-attr {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-style: normal;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 12px;
+      opacity: 0.7;
     }
 
     .hero-stats {
@@ -693,16 +707,17 @@ const totalCount = cards.length;
         <span class="hero-name-line"><span class="hero-name-inner">Kumar</span></span>
       </h1>
       <div class="hero-bottom">
-        <p class="hero-tagline">
-          Shipping ideas fast — one subdomain<br />at a time.
-        </p>
+        <blockquote class="hero-quote">
+          The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise.
+          <cite class="hero-quote-attr">— Edsger W. Dijkstra</cite>
+        </blockquote>
         <div class="hero-stats">
           <div class="hero-stat">
-            <span class="hero-stat-num" data-count="{totalCount}">{totalCount}</span>
+            <span class="hero-stat-num" data-count={totalCount}>{totalCount}</span>
             <span class="hero-stat-label">Products</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat-num" data-count="{liveCount}">{liveCount}</span>
+            <span class="hero-stat-num" data-count={liveCount}>{liveCount}</span>
             <span class="hero-stat-label">Live now</span>
           </div>
           <div class="hero-stat">
