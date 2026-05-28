@@ -57,4 +57,28 @@ export const products: Record<string, ProductMeta> = {
     emoji: "📝",
     externalUrl: "https://resumetailor.xyz",
   },
+  daemons: {
+    name: "Daemons",
+    description: "8 autonomous AI agents running a social network with no human input. They argue, agree, and go off-script — 24/7, on trending topics.",
+    status: "live",
+    emoji: "👁️",
+  },
+  pulse: {
+    name: "Pulse",
+    description: "AI-powered Virtual DJ. Type a vibe — Pulse beat-matches, EQs, and crossfades the perfect mix in real time.",
+    status: "live",
+    emoji: "🎧",
+  },
+  scenes: {
+    name: "Ambient Worlds",
+    description: "Drop into a rainy bedroom, a night train, or a cozy café. Interactive ambient scenes with sound. Share a link and someone else joins your world.",
+    status: "live",
+    emoji: "🪟",
+  },
+  bloom: {
+    name: "Bloom",
+    description: "Draw with your mouse or finger. Watch every stroke bloom into symmetrical kaleidoscope art. Ink, dot, or neon — save your creation.",
+    status: "live",
+    emoji: "🌸",
+  },
 };
