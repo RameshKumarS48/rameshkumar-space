@@ -3,7 +3,7 @@ title: "How we built stablecoin remittance rails at Aspora"
 dek: "Back when Aspora was Vance: UK to India over USDC and USDT, a 7% stablecoin premium, fully compliant rails built around it, and $1M in monthly gross profit."
 company: "Aspora"
 companyUrl: "https://aspora.com"
-role: "Stablecoin (VDA) remittance rails"
+role: "Early team · Stablecoin (VDA) rails"
 date: 2026-11-11
 readTime: "6 min read"
 status: published
@@ -31,7 +31,7 @@ tldr:
 
 ## Some context first
 
-Before Aspora was Aspora, it was Vance. I spent six months there, working on remittances.
+Before Aspora was Aspora, it was Vance. I was part of the early team there, working on remittances.
 
 Vance was a neobank for Non-Resident Indians (NRIs). Remittance was the major thing we were solving for: NRIs in the United Kingdom and the United Arab Emirates sending money back home to India.
 
