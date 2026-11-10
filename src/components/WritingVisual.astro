@@ -1,0 +1,124 @@
+---
+// Decorative hero motif for a writing card / article hero.
+// "pipeline" = GTM machine (stages flowing into a CRM).
+// "ledger"   = money moving over stablecoin rails between currencies.
+interface Props { kind: "pipeline" | "ledger"; size?: "card" | "hero"; }
+const { kind, size = "card" } = Astro.props;
+---
+
+<div class={`wv wv-${size}`} aria-hidden="true">
+  {kind === "pipeline" ? (
+    <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="wv-grid-p" width="24" height="24" patternUnits="userSpaceOnUse">
+          <path d="M24 0H0V24" fill="none" class="wv-grid" />
+        </pattern>
+      </defs>
+      <rect width="600" height="300" fill="url(#wv-grid-p)" />
+
+      <!-- flow lines -->
+      <path class="wv-line" d="M96 150 H186" />
+      <path class="wv-line" d="M246 150 H336" />
+      <path class="wv-line" d="M396 150 C430 150 430 86 470 86" />
+      <path class="wv-line" d="M396 150 H470" />
+      <path class="wv-line" d="M396 150 C430 150 430 214 470 214" />
+      <path class="wv-flow" d="M96 150 H186 M246 150 H336 M396 150 H470" />
+
+      <!-- sources -->
+      <g class="wv-node">
+        <rect x="36" y="120" width="60" height="60" rx="6" />
+        <circle cx="56" cy="142" r="4" class="wv-fill" /><circle cx="76" cy="142" r="4" class="wv-fill-soft" />
+        <circle cx="56" cy="160" r="4" class="wv-fill-soft" /><circle cx="76" cy="160" r="4" class="wv-fill" />
+      </g>
+      <text x="66" y="204" class="wv-label">ICPs</text>
+
+      <g class="wv-node">
+        <rect x="186" y="120" width="60" height="60" rx="6" />
+        <path d="M202 140 H230 M202 150 H224 M202 160 H230" class="wv-stroke" />
+      </g>
+      <text x="216" y="204" class="wv-label">LEADS</text>
+
+      <g class="wv-node wv-node-accent">
+        <rect x="336" y="120" width="60" height="60" rx="6" />
+        <path d="M350 166 L362 150 L372 158 L384 138" class="wv-stroke-inv" />
+      </g>
+      <text x="366" y="204" class="wv-label">CLAUDE</text>
+
+      <!-- outputs -->
+      <g class="wv-chip"><rect x="470" y="70" width="96" height="32" rx="16" /><text x="518" y="90">EMAIL</text></g>
+      <g class="wv-chip"><rect x="470" y="134" width="96" height="32" rx="16" /><text x="518" y="154">LINKEDIN</text></g>
+      <g class="wv-chip"><rect x="462" y="198" width="112" height="32" rx="16" /><text x="518" y="218">DASHBOARD</text></g>
+    </svg>
+  ) : (
+    <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="wv-grid-l" width="24" height="24" patternUnits="userSpaceOnUse">
+          <path d="M24 0H0V24" fill="none" class="wv-grid" />
+        </pattern>
+      </defs>
+      <rect width="600" height="300" fill="url(#wv-grid-l)" />
+
+      <!-- rail -->
+      <path class="wv-line" d="M110 150 H490" />
+      <path class="wv-flow" d="M110 150 H490" />
+
+      <!-- fiat in -->
+      <g class="wv-node">
+        <circle cx="80" cy="150" r="34" />
+        <text x="80" y="155" class="wv-cur">USD</text>
+      </g>
+      <text x="80" y="210" class="wv-label">FIAT IN</text>
+
+      <!-- chain blocks -->
+      {[0, 1, 2, 3].map((i) => (
+        <g class={`wv-node ${i === 1 ? "wv-node-accent" : ""}`}>
+          <rect x={186 + i * 64} y={128} width="44" height="44" rx="6" />
+          <path d={`M${198 + i * 64} ${144} H${218 + i * 64} M${198 + i * 64} ${156} H${212 + i * 64}`} class={i === 1 ? "wv-stroke-inv" : "wv-stroke"} />
+        </g>
+      ))}
+      <text x="300" y="210" class="wv-label">STABLECOIN RAIL</text>
+
+      <!-- fiat out -->
+      <g class="wv-node">
+        <circle cx="520" cy="150" r="34" />
+        <text x="520" y="155" class="wv-cur">INR</text>
+      </g>
+      <text x="520" y="210" class="wv-label">FIAT OUT</text>
+
+      <!-- settlement tick -->
+      <g class="wv-chip"><rect x="250" y="62" width="100" height="30" rx="15" /><text x="300" y="81">SETTLED</text></g>
+      <path class="wv-line" d="M300 92 V128" />
+    </svg>
+  )}
+</div>
+
+<style>
+  .wv { width: 100%; aspect-ratio: 2 / 1; color: var(--accent); }
+  .wv svg { width: 100%; height: 100%; display: block; }
+
+  .wv :global(.wv-grid) { stroke: var(--border); stroke-width: 1; opacity: .7; }
+  .wv :global(.wv-line) { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
+  .wv :global(.wv-flow) {
+    fill: none; stroke: var(--accent); stroke-width: 2;
+    stroke-dasharray: 6 14; animation: wv-dash 1.4s linear infinite;
+  }
+  .wv :global(.wv-node rect),
+  .wv :global(.wv-node circle) { fill: var(--bg-card); stroke: var(--border-strong); stroke-width: 1.5; }
+  .wv :global(.wv-node-accent rect) { fill: var(--accent); stroke: var(--accent); }
+  .wv :global(.wv-fill) { fill: var(--accent) !important; stroke: none !important; }
+  .wv :global(.wv-fill-soft) { fill: var(--accent2) !important; stroke: none !important; opacity: .35; }
+  .wv :global(.wv-stroke) { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; }
+  .wv :global(.wv-stroke-inv) { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .wv :global(.wv-chip rect) { fill: var(--bg-card); stroke: var(--accent); stroke-width: 1.5; }
+  .wv :global(.wv-chip text),
+  .wv :global(.wv-label),
+  .wv :global(.wv-cur) {
+    font-family: 'JetBrains Mono', monospace; text-anchor: middle; letter-spacing: .1em;
+  }
+  .wv :global(.wv-chip text) { font-size: 11px; fill: var(--accent); }
+  .wv :global(.wv-label) { font-size: 10px; fill: var(--ink-muted); }
+  .wv :global(.wv-cur) { font-size: 14px; font-weight: 500; fill: var(--ink); }
+
+  @keyframes wv-dash { to { stroke-dashoffset: -20; } }
+  @media (prefers-reduced-motion: reduce) { .wv :global(.wv-flow) { animation: none; } }
+</style>

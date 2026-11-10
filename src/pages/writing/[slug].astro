@@ -1,0 +1,215 @@
+---
+import { getCollection, render } from "astro:content";
+import WritingLayout from "../../layouts/WritingLayout.astro";
+import WritingVisual from "../../components/WritingVisual.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("writing");
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const d = post.data;
+const isDraft = d.status === "draft";
+const { Content } = await render(post);
+
+const others = (await getCollection("writing"))
+  .filter((p) => p.id !== post.id)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const dateLabel = d.date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
+---
+
+<WritingLayout title={`${d.title} — Ramesh Kumar Saragadam`} description={d.dek} canonicalPath={`/writing/${post.id}`} type="article">
+  <article>
+    <!-- HERO -->
+    <header class="ah">
+      <div class="ah-inner">
+        <a href="/writing" class="ah-back">← All writing</a>
+        <div class="ah-eyebrow">
+          <span class="ah-dot"></span>
+          {d.companyUrl ? <a href={d.companyUrl} target="_blank" rel="noopener noreferrer">{d.company}</a> : <span>{d.company}</span>}
+          <span class="ah-sep">/</span>
+          <span>{d.role}</span>
+        </div>
+        <h1 class="ah-title">{d.title}</h1>
+        <p class="ah-dek">{d.dek}</p>
+
+        <div class="ah-meta">
+          <span>Ramesh Kumar Saragadam</span>
+          <span class="ah-sep">·</span>
+          <span>{isDraft ? "Writing now" : dateLabel}</span>
+          {d.readTime && !isDraft && (<><span class="ah-sep">·</span><span>{d.readTime}</span></>)}
+        </div>
+
+        {d.stats.length > 0 && (
+          <div class="ah-stats">
+            {d.stats.map((s) => (
+              <div class="ah-stat"><span class="ah-stat-num">{s.value}</span><span class="ah-stat-label">{s.label}</span></div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div class="ah-visual"><WritingVisual kind={d.visual} size="hero" /></div>
+    </header>
+
+    {d.tldr.length > 0 && (
+      <section class="tldr">
+        <p class="section-label">TL;DR</p>
+        <ul>{d.tldr.map((t) => <li>{t}</li>)}</ul>
+      </section>
+    )}
+
+    {isDraft ? (
+      <section class="draft">
+        <p class="draft-badge">Full write-up in progress</p>
+        <p class="draft-text">I'm turning this into a detailed breakdown with architecture diagrams and real numbers. Want the walkthrough before it's published? I'm happy to get on a call.</p>
+        <div class="draft-actions">
+          <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Message me on LinkedIn</a>
+          <a href="mailto:srameshkmr48@gmail.com" class="btn">Email</a>
+        </div>
+      </section>
+    ) : (
+      <div class="prose"><Content /></div>
+    )}
+
+    {!isDraft && (
+      <section class="cta">
+        <p class="cta-title">Building something like this?</p>
+        <p class="cta-text">I'm always up for a conversation about GTM systems, AI agents and payments infrastructure.</p>
+        <div class="draft-actions">
+          <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Message me on LinkedIn</a>
+          <a href="mailto:srameshkmr48@gmail.com" class="btn">Email</a>
+        </div>
+      </section>
+    )}
+
+    {others.length > 0 && (
+      <aside class="next">
+        <p class="section-label">Also read</p>
+        {others.map((o) => (
+          <a href={`/writing/${o.id}`} class="next-item">
+            <span class="next-co">{o.data.company}</span>
+            <span class="next-title">{o.data.title}</span>
+            <span class="next-arrow">→</span>
+          </a>
+        ))}
+      </aside>
+    )}
+  </article>
+</WritingLayout>
+
+<style>
+  /* ── HERO ── */
+  .ah {
+    max-width: 1200px; margin: 0 auto; padding: 72px 48px 56px;
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: end;
+    border-bottom: 1px solid var(--border);
+  }
+  .ah-back { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-muted); text-decoration: none; display: inline-block; margin-bottom: 40px; }
+  .ah-back:hover { color: var(--accent); }
+  .ah-eyebrow {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
+  }
+  .ah-eyebrow a { text-decoration: none; border-bottom: 1px solid currentColor; }
+  .ah-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .ah-sep { color: var(--ink-muted); }
+  .ah-title { font-size: clamp(34px, 4.4vw, 60px); font-weight: 800; letter-spacing: -.03em; line-height: 1; overflow-wrap: break-word; }
+  .ah-dek {
+    margin-top: 28px; max-width: 620px;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.45; color: var(--ink-soft);
+    border-left: 2px solid var(--accent); padding-left: 18px;
+  }
+  .ah-meta {
+    margin-top: 32px; display: flex; flex-wrap: wrap; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted);
+  }
+  .ah-stats { margin-top: 40px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+  @media (max-width: 600px) { .ah-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; } }
+  .ah-stat-num { display: block; font-size: clamp(30px, 2.5vw, 36px); font-weight: 800; line-height: 1; }
+  .ah-stat-label { display: block; margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); }
+  .ah-visual { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 16px; }
+
+  /* ── TLDR / DRAFT / CTA ── */
+  .tldr, .draft, .cta, .next, .prose { max-width: 720px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+  .tldr { margin-top: 64px; }
+  .tldr ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .tldr li { position: relative; padding-left: 24px; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+  .tldr li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+
+  .draft, .cta { margin-top: 56px; }
+  .draft > *, .cta > * { max-width: 100%; }
+  .draft-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #b45309; border: 1px solid #fcd34d; background: #fffbeb; padding: 5px 10px; border-radius: 2px; margin-bottom: 18px; }
+  .draft-text, .cta-text { font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; line-height: 1.7; color: var(--ink-soft); }
+  .cta { border-top: 1px solid var(--border); padding-top: 48px; margin-top: 80px; }
+  .cta-title { font-size: 28px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 12px; }
+  .draft-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .04em; text-decoration: none;
+    padding: 12px 20px; border: 1px solid var(--border-strong); border-radius: 2px; color: var(--ink); background: var(--bg-card);
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .next { margin-top: 80px; }
+  .next-item {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: baseline;
+    padding: 20px 0; border-top: 1px solid var(--border); text-decoration: none;
+  }
+  .next-item:last-child { border-bottom: 1px solid var(--border); }
+  .next-co { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .next-title { font-size: 18px; font-weight: 700; }
+  .next-arrow { color: var(--ink-muted); transition: transform .2s; }
+  .next-item:hover .next-arrow { transform: translateX(4px); color: var(--accent); }
+
+  /* ── PROSE (markdown body) ── */
+  .prose { margin-top: 56px; font-family: 'Source Serif 4', Georgia, serif; font-size: 19px; line-height: 1.75; color: var(--ink-soft); }
+  .prose :global(> * + *) { margin-top: 1.2em; }
+  .prose :global(h2) { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; color: var(--ink); margin-top: 2.2em; }
+  .prose :global(h3) { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-top: 1.8em; }
+  .prose :global(strong) { color: var(--ink); font-weight: 600; }
+  .prose :global(a) { color: var(--accent); text-underline-offset: 3px; }
+  .prose :global(ul), .prose :global(ol) { padding-left: 1.3em; }
+  .prose :global(li + li) { margin-top: .4em; }
+  .prose :global(li::marker) { color: var(--accent); }
+  .prose :global(blockquote) {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 26px; line-height: 1.45; color: var(--ink);
+    border-left: 2px solid var(--accent); padding-left: 22px;
+  }
+  .prose :global(code) { font-family: 'JetBrains Mono', monospace; font-size: .8em; background: var(--bg-hover); padding: 2px 6px; border-radius: 2px; color: var(--ink); }
+  .prose :global(pre) { background: var(--ink); color: #E6E6F0; padding: 20px 22px; border-radius: 4px; overflow-x: auto; font-size: 14px; line-height: 1.6; }
+  .prose :global(pre code) { background: none; padding: 0; color: inherit; }
+  .prose :global(hr) { border: none; border-top: 1px solid var(--border); margin: 3em 0; }
+  .prose :global(table) { width: 100%; border-collapse: collapse; font-family: 'Syne', sans-serif; font-size: 14px; display: block; overflow-x: auto; }
+  .prose :global(th), .prose :global(td) { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .prose :global(th) { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+
+  /* Figures & diagrams can break out wider than the text column */
+  .prose :global(figure) { margin: 2.4em -64px; }
+  .prose :global(figure img), .prose :global(figure svg), .prose :global(img) {
+    width: 100%; height: auto; display: block; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card);
+  }
+  .prose :global(figure.portrait) { max-width: 640px; margin-left: auto; margin-right: auto; }
+  .prose :global(figcaption) { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .04em; color: var(--ink-muted); text-align: center; }
+
+  /* <div class="callout">…</div> */
+  .prose :global(.callout) { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 20px 24px; font-size: 17px; }
+
+  /* <div class="metrics"><div><b>10x</b><span>leads/week</span></div>…</div> */
+  .prose :global(.metrics) { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 2em 0; }
+  .prose :global(.metrics > div) { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 20px; }
+  .prose :global(.metrics b) { display: block; font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--ink); line-height: 1; }
+  .prose :global(.metrics span) { display: block; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); }
+
+  @media (max-width: 900px) {
+    .ah { grid-template-columns: 1fr; gap: 40px; padding: 48px 16px 40px; }
+    .ah-back { margin-bottom: 28px; }
+    .tldr, .draft, .cta, .next, .prose { padding-left: 16px; padding-right: 16px; }
+    .prose { font-size: 18px; }
+    .prose :global(figure) { margin-left: 0; margin-right: 0; }
+  }
+</style>
