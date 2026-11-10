@@ -2,11 +2,14 @@
 import { products, type ProductMeta } from "../data/products";
 import { getCollection } from "astro:content";
 import WritingVisual from "../components/WritingVisual.astro";
+import { inProgress } from "../data/inProgress";
 import "../styles/global.css";
 
 const posts = (await getCollection("writing")).sort((a, b) => a.data.order - b.data.order);
-const featured = posts.slice(0, 2);
-const latest = posts[0];
+const spotlight = posts.find(p => p.data.status === "published") ?? posts[0];
+const morePosts = posts.filter(p => p !== spotlight);
+const latest = spotlight;
+const inProgressKeys = new Set(inProgress.map(p => p.key));
 
 interface DnsRecord { type: string; name: string; }
 interface ProductCard { subdomain: string; url: string; meta: ProductMeta; }
@@ -43,6 +46,9 @@ for (const [subdomain, meta] of Object.entries(products)) {
     cards.push({ subdomain, url: meta.externalUrl, meta });
   }
 }
+
+// In-progress projects get their own section, not the shipped grid.
+cards = cards.filter(c => !inProgressKeys.has(c.subdomain));
 
 cards.sort((a, b) => {
   if (a.meta.status === "live" && b.meta.status !== "live") return -1;
@@ -668,107 +674,131 @@ const totalCount = cards.length;
     .hero-new-arrow { color: var(--accent); transition: transform 0.2s; flex-shrink: 0; }
     .hero-new:hover .hero-new-arrow { transform: translateX(4px); }
 
-    /* ── WRITING (featured) ── */
-    .writing-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 96px 48px 24px;
-    }
-    @media (max-width: 700px) { .writing-section { padding: 64px 24px 8px; } }
+    /* ── WRITING SPOTLIGHT ── */
+    .writing-section { max-width: 1200px; margin: 0 auto; padding: 96px 48px 24px; }
+    @media (max-width: 700px) { .writing-section { padding: 64px 16px 8px; } }
 
     .writing-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; margin-bottom: 40px;
     }
     .writing-all {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      color: var(--ink-soft);
-      text-decoration: none;
-      display: inline-flex;
-      gap: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.04em;
+      color: var(--ink-soft); text-decoration: none; display: inline-flex; gap: 6px;
       transition: gap 0.2s, color 0.2s;
     }
     .writing-all:hover { gap: 12px; color: var(--accent); }
 
-    .writing-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    @media (max-width: 800px) { .writing-grid { grid-template-columns: 1fr; } }
-
-    .writing-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 24px 24px 28px;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
+    .spot {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px;
+      padding: 40px; text-decoration: none; color: inherit; position: relative; overflow: hidden;
+      box-shadow: var(--shadow);
       transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
     }
-    .writing-card::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: var(--accent);
-      transform: scaleY(0);
-      transform-origin: bottom;
-      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+    .spot::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
     }
-    .writing-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-    .writing-card:hover::after { transform: scaleY(1); }
-
-    .writing-visual {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 10px;
-      margin-bottom: 24px;
-    }
+    .spot:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
     .writing-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
+      display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-muted);
     }
-    .writing-num { color: var(--accent); }
-    .writing-title {
-      font-size: clamp(22px, 2.4vw, 30px);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 12px;
+    .spot-tag { background: var(--accent); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 10px; letter-spacing: .1em; }
+    .spot-title { font-size: clamp(28px, 3.4vw, 46px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; margin-bottom: 18px; }
+    .spot-dek {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 1.8vw, 22px);
+      line-height: 1.45; color: var(--ink-soft); border-left: 2px solid var(--accent); padding-left: 16px; max-width: 560px;
     }
-    .writing-dek {
-      font-size: 14px;
-      color: var(--ink-soft);
-      line-height: 1.7;
-      flex: 1;
+    .spot-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+    .spot-stat-num { display: block; font-size: clamp(24px, 2.4vw, 32px); font-weight: 800; line-height: 1; }
+    .spot-stat-label {
+      display: block; margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); line-height: 1.4;
     }
-    .writing-role {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
+    .spot-cta {
+      display: inline-flex; gap: 8px; margin-top: 32px; padding: 12px 20px; border-radius: 2px;
+      background: var(--ink); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .04em;
+      transition: background .2s, gap .2s;
     }
-    .writing-card:hover .card-arrow { gap: 12px; color: var(--accent); }
+    .spot:hover .spot-cta { background: var(--accent); gap: 14px; }
+    .spot-visual { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 12px; }
+
+    .more-row {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center;
+      margin-top: 12px; padding: 20px 28px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 4px; text-decoration: none; color: inherit; transition: border-color .2s;
+    }
+    .more-row:hover { border-color: var(--border-strong); }
+    .more-co { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+    .more-title { font-size: 17px; font-weight: 700; }
+    .more-arrow { color: var(--ink-muted); }
+
+    @media (max-width: 860px) {
+      .spot { grid-template-columns: 1fr; gap: 28px; padding: 24px 20px; }
+      .spot-visual { order: -1; }
+      .spot-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .more-row { grid-template-columns: 1fr auto; padding: 16px 20px; gap: 6px 12px; }
+      .more-co { grid-column: 1 / -1; }
+    }
+
+    /* ── IN PROGRESS ── */
+    .building { background: var(--ink); color: #fff; margin-top: 72px; position: relative; overflow: hidden; }
+    .building::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .building-inner { max-width: 1200px; margin: 0 auto; padding: 88px 48px; position: relative; }
+    @media (max-width: 700px) { .building-inner { padding: 64px 16px; } }
+    .building-label { color: rgba(255,255,255,.5); }
+    .building-title { color: #fff; }
+    .building-title em { color: #A5B4FC; }
+    .building-all { color: rgba(255,255,255,.7); }
+    .building-all:hover { color: #A5B4FC; }
+
+    .building-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (max-width: 800px) { .building-grid { grid-template-columns: 1fr; } }
+    .build-card {
+      display: flex; flex-direction: column; padding: 32px; border-radius: 4px; text-decoration: none; color: #fff;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12);
+      transition: border-color .25s, background .25s, transform .25s;
+    }
+    .build-card:hover { border-color: #818CF8; background: rgba(129,140,248,.08); transform: translateY(-2px); }
+    @media (max-width: 700px) { .build-card { padding: 24px 20px; } }
+    .build-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+    .build-live {
+      display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: .1em; text-transform: uppercase; color: #86EFAC; border: 1px solid rgba(134,239,172,.35);
+      padding: 5px 10px; border-radius: 999px;
+    }
+    .build-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ADE80; box-shadow: 0 0 0 0 rgba(74,222,128,.6); animation: buildPing 2s infinite; }
+    @keyframes buildPing { 0% { box-shadow: 0 0 0 0 rgba(74,222,128,.6); } 70% { box-shadow: 0 0 0 8px rgba(74,222,128,0); } 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); } }
+    @media (prefers-reduced-motion: reduce) { .build-dot { animation: none; } }
+    .build-url { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.45); }
+    .build-name { font-size: clamp(26px, 3vw, 36px); font-weight: 800; letter-spacing: -.02em; line-height: 1.05; margin-bottom: 14px; }
+    .build-what { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,.75); }
+    .build-now {
+      margin-top: 18px; padding: 14px 16px; border-left: 2px solid #818CF8; background: rgba(255,255,255,.04);
+      font-size: 14px; line-height: 1.6; color: rgba(255,255,255,.85); flex: 1;
+    }
+    .build-now span {
+      display: block; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: .12em; text-transform: uppercase; color: #A5B4FC;
+    }
+    .build-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+    .build-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .build-tags span {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .04em; padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,.18); border-radius: 2px; color: rgba(255,255,255,.65);
+    }
+    .build-arrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,.6); transition: color .2s; }
+    .build-card:hover .build-arrow { color: #A5B4FC; }
+
+    /* ── SHIPPED ── */
+    .shipped-sub { margin-top: 16px; font-size: 15px; color: var(--ink-soft); }
 
     /* ── REVEAL ANIMATION ── */
     .reveal {
@@ -820,7 +850,9 @@ const totalCount = cards.length;
       nav, nav.scrolled { padding-left: 16px; padding-right: 16px; }
       .nav-links { gap: 16px; }
       .nav-links svg { display: none; }
-      .nav-links a[href*="notion"] { display: none; }
+      .nav-links a[href*="notion"],
+      .nav-links a[href*="linkedin"],
+      .nav-links a[href="#building"] { display: none; }
       .footer-inner { padding: 32px 16px; }
       .footer-links { flex-wrap: wrap; gap: 12px 20px; }
       .hero { padding: 0 24px 48px; }
@@ -839,6 +871,8 @@ const totalCount = cards.length;
     <a href="/" class="nav-logo">rameshkumar.space</a>
     <div class="nav-links">
       <a href="/writing">Writing</a>
+      <a href="#building">Building</a>
+      <a href="#shipped">Shipped</a>
       <a href="https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
         LinkedIn
@@ -905,37 +939,77 @@ const totalCount = cards.length;
     </div>
   </div>
 
-  <!-- WRITING (featured) -->
-  {featured.length > 0 && (
+  <!-- WRITING SPOTLIGHT -->
+  {spotlight && (
     <section class="writing-section" id="writing">
       <div class="writing-header reveal">
         <div>
-          <p class="section-label">Writing</p>
+          <p class="section-label">Featured writing</p>
           <h2 class="products-title">Build logs from<br /><em>real systems</em></h2>
         </div>
         <a href="/writing" class="writing-all">All writing <span>→</span></a>
       </div>
 
-      <div class="writing-grid">
-        {featured.map((p, i) => (
-          <a href={`/writing/${p.id}`} class="writing-card reveal" style={`transition-delay: ${i * 0.1}s`}>
-            <div class="writing-visual"><WritingVisual kind={p.data.visual} /></div>
-            <div class="writing-meta">
-              <span class="writing-num">{String(i + 1).padStart(2, "0")}</span>
-              <span>{p.data.company}</span>
-              {p.data.status === "draft" && <span class="card-badge badge-beta">Writing now</span>}
+      <a href={`/writing/${spotlight.id}`} class="spot reveal">
+        <div class="spot-body">
+          <div class="writing-meta">
+            <span class="spot-tag">{spotlight.data.status === "published" ? "New" : "Writing now"}</span>
+            <span>{spotlight.data.company}</span>
+            {spotlight.data.readTime && <><span>·</span><span>{spotlight.data.readTime}</span></>}
+          </div>
+          <h3 class="spot-title">{spotlight.data.title}</h3>
+          <p class="spot-dek">{spotlight.data.dek}</p>
+          {spotlight.data.stats.length > 0 && (
+            <div class="spot-stats">
+              {spotlight.data.stats.map(s => (
+                <div><span class="spot-stat-num">{s.value}</span><span class="spot-stat-label">{s.label}</span></div>
+              ))}
             </div>
-            <h3 class="writing-title">{p.data.title}</h3>
-            <p class="writing-dek">{p.data.dek}</p>
-            <div class="card-footer">
-              <span class="writing-role">{p.data.role}</span>
-              <span class="card-arrow"><span>Read</span><span>→</span></span>
+          )}
+          <span class="spot-cta">Read the build <span>→</span></span>
+        </div>
+        <div class="spot-visual"><WritingVisual kind={spotlight.data.visual} /></div>
+      </a>
+
+      {morePosts.map(p => (
+        <a href={`/writing/${p.id}`} class="more-row reveal">
+          <span class="more-co">{p.data.company}</span>
+          <span class="more-title">{p.data.title}</span>
+          {p.data.status === "draft" ? <span class="card-badge badge-beta">Writing now</span> : <span class="more-arrow">→</span>}
+        </a>
+      ))}
+    </section>
+  )}
+
+  <!-- IN PROGRESS -->
+  <section class="building" id="building">
+    <div class="building-inner">
+      <div class="writing-header reveal">
+        <div>
+          <p class="section-label building-label">In progress</p>
+          <h2 class="products-title building-title">Live, and still<br /><em>building</em></h2>
+        </div>
+        <a href="#shipped" class="writing-all building-all">Plus {totalCount} shipped products <span>↓</span></a>
+      </div>
+      <div class="building-grid">
+        {inProgress.map((p, i) => (
+          <a href={p.url} target="_blank" rel="noopener noreferrer" class="build-card reveal" style={`transition-delay: ${i * 0.1}s`}>
+            <div class="build-top">
+              <span class="build-live"><span class="build-dot"></span>Live · building now</span>
+              <span class="build-url">{p.url.replace("https://", "")}</span>
+            </div>
+            <h3 class="build-name">{p.name}</h3>
+            <p class="build-what">{p.what}</p>
+            <p class="build-now"><span>Now</span>{p.now}</p>
+            <div class="build-foot">
+              <div class="build-tags">{p.tags.map(t => <span>{t}</span>)}</div>
+              <span class="build-arrow">Visit →</span>
             </div>
           </a>
         ))}
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 
   <!-- ABOUT -->
   <section class="about reveal">
@@ -984,11 +1058,15 @@ const totalCount = cards.length;
   </section>
 
   <!-- PRODUCTS -->
-  <section class="products-section">
+  <section class="products-section" id="shipped">
     <div class="products-header reveal">
-      <h2 class="products-title">
-        Things I've<br /><em>shipped</em>
-      </h2>
+      <div>
+        <p class="section-label">Shipped</p>
+        <h2 class="products-title">
+          Things I've<br /><em>shipped</em>
+        </h2>
+        <p class="shipped-sub">{totalCount} products, each live at its own subdomain. One every 21 days.</p>
+      </div>
       <div class="filter-pills" role="group" aria-label="Filter products">
         <button class="filter-pill active" data-filter="all">All</button>
         <button class="filter-pill" data-filter="live">Live</button>

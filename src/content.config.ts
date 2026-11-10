@@ -22,6 +22,8 @@ const writing = defineCollection({
     tags: z.array(z.string()).default([]),
     stats: z.array(z.object({ value: z.string(), label: z.string() })).default([]),
     tldr: z.array(z.string()).default([]),
+    // Short labels for the visual flow in the TL;DR pop-up.
+    steps: z.array(z.string()).default([]),
   }),
 });
 

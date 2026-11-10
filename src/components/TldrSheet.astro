@@ -1,0 +1,188 @@
+---
+// Sticky "TL;DR" button (appears after the hero, hides at the end of the article)
+// + a pop-up with the 30-second version: stats, the steps as a flow, key points.
+interface Props {
+  title: string;
+  company: string;
+  stats: { value: string; label: string }[];
+  steps: string[];
+  tldr: string[];
+}
+const { title, company, stats, steps, tldr } = Astro.props;
+const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
+---
+
+<button type="button" class="tl-fab" id="tlFab" aria-haspopup="dialog" aria-controls="tlDialog" hidden>
+  <span class="tl-fab-icon" aria-hidden="true">
+    <svg viewBox="0 0 16 16"><path d="M3 4h10M3 8h7M3 12h4" /></svg>
+  </span>
+  <span class="tl-fab-text"><b>TL;DR</b> <span class="tl-fab-sub">30-second version</span></span>
+</button>
+
+<dialog class="tl-dialog" id="tlDialog" aria-labelledby="tlTitle">
+  <div class="tl-sheet">
+    <div class="tl-head">
+      <div>
+        <p class="tl-kicker">TL;DR · {company}</p>
+        <h2 class="tl-title" id="tlTitle">{title}</h2>
+      </div>
+      <button type="button" class="tl-close" data-close aria-label="Close summary">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+      </button>
+    </div>
+
+    {stats.length > 0 && (
+      <div class="tl-stats">
+        {stats.map((s) => (
+          <div class="tl-stat"><span class="tl-stat-num">{s.value}</span><span class="tl-stat-label">{s.label}</span></div>
+        ))}
+      </div>
+    )}
+
+    {steps.length > 0 && (
+      <div class="tl-block">
+        <p class="tl-label">What I built</p>
+        <ol class="tl-flow">
+          {steps.map((s, i) => (
+            <li class="tl-step">
+              <span class="tl-step-n">{i + 1}</span>
+              <span class="tl-step-t">{s}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    )}
+
+    {tldr.length > 0 && (
+      <div class="tl-block">
+        <p class="tl-label">Key points</p>
+        <ul class="tl-points">{tldr.map((t) => <li>{t}</li>)}</ul>
+      </div>
+    )}
+
+    <div class="tl-actions">
+      <button type="button" class="tl-btn tl-btn-primary" data-close>Read the full build</button>
+      <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" class="tl-btn">Talk to me about it</a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ── STICKY BUTTON ── */
+  .tl-fab {
+    position: fixed; left: 50%; bottom: 24px; z-index: 90;
+    transform: translate(-50%, 140%); opacity: 0;
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 8px 20px 8px 8px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+    background: var(--ink); color: #fff; cursor: pointer;
+    box-shadow: 0 10px 40px rgba(12,12,24,.28);
+    font-family: 'Syne', sans-serif; font-size: 14px; white-space: nowrap;
+    transition: transform .35s cubic-bezier(.16,1,.3,1), opacity .25s, background .2s;
+  }
+  .tl-fab[hidden] { display: none; }
+  .tl-fab.show { transform: translate(-50%, 0); opacity: 1; }
+  .tl-fab:hover { background: var(--accent); }
+  .tl-fab:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
+  .tl-fab-icon {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+    display: grid; place-items: center; flex-shrink: 0; transition: background .2s;
+  }
+  .tl-fab:hover .tl-fab-icon { background: var(--ink); }
+  .tl-fab-icon svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; }
+  .tl-fab-text b { font-weight: 800; letter-spacing: .02em; }
+  .tl-fab-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .04em; color: rgba(255,255,255,.6); margin-left: 6px; }
+
+  /* ── DIALOG ── */
+  .tl-dialog {
+    border: none; padding: 0; background: transparent; color: var(--ink);
+    width: min(680px, calc(100vw - 32px)); max-height: calc(100vh - 48px); margin: auto;
+  }
+  .tl-dialog::backdrop { background: rgba(12,12,24,.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .tl-dialog[open] .tl-sheet { animation: tl-in .35s cubic-bezier(.16,1,.3,1); }
+  @keyframes tl-in { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
+
+  .tl-sheet {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 28px; max-height: calc(100vh - 48px); overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(12,12,24,.3);
+  }
+  .tl-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .tl-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .tl-title { font-size: 22px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+  .tl-close {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-strong);
+    background: var(--bg-card); cursor: pointer; display: grid; place-items: center; transition: border-color .2s;
+  }
+  .tl-close:hover { border-color: var(--accent); }
+  .tl-close svg { width: 14px; height: 14px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; }
+
+  .tl-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 24px; }
+  .tl-stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 14px 12px; }
+  .tl-stat-num { display: block; font-size: 26px; font-weight: 800; line-height: 1; }
+  .tl-stat-label { display: block; margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); line-height: 1.4; }
+
+  .tl-block { margin-bottom: 24px; }
+  .tl-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 12px; }
+
+  /* steps as a connected flow */
+  .tl-flow { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; counter-reset: none; }
+  .tl-step {
+    position: relative; display: flex; flex-direction: column; gap: 8px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 12px;
+  }
+  .tl-step:nth-child(n+3) { border-color: var(--accent2); }
+  .tl-step-n {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .tl-step-t { font-size: 13px; font-weight: 700; line-height: 1.3; }
+
+  .tl-points { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .tl-points li { position: relative; padding-left: 22px; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+  .tl-points li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+
+  .tl-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+  .tl-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .04em; text-decoration: none; cursor: pointer;
+    padding: 12px 18px; border: 1px solid var(--border-strong); border-radius: 2px; background: var(--bg-card); color: var(--ink);
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .tl-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tl-btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .tl-btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  @media (max-width: 600px) {
+    .tl-fab { bottom: 16px; }
+    .tl-dialog { width: 100vw; max-width: 100vw; max-height: 92vh; margin: auto 0 0; }
+    .tl-sheet { border-radius: 12px 12px 0 0; padding: 22px 16px 28px; max-height: 92vh; }
+    .tl-dialog[open] .tl-sheet { animation-name: tl-up; }
+    .tl-stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .tl-flow { grid-template-columns: 1fr 1fr; }
+  }
+  @keyframes tl-up { from { transform: translateY(100%); } to { transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .tl-fab, .tl-dialog[open] .tl-sheet { transition: none; animation: none; }
+  }
+</style>
+
+<script>
+  const fab = document.getElementById('tlFab') as HTMLButtonElement | null;
+  const dialog = document.getElementById('tlDialog') as HTMLDialogElement | null;
+  if (fab && dialog) {
+    fab.hidden = false;
+    const hero = document.querySelector('.ah');
+    const end = document.querySelector('.cta, .w-footer');
+
+    // Show once the hero has scrolled away; hide again when the end of the article is on screen.
+    let pastHero = false, atEnd = false;
+    const update = () => fab.classList.toggle('show', pastHero && !atEnd);
+    if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; update(); }).observe(hero);
+    if (end) new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; update(); }).observe(end);
+
+    fab.addEventListener('click', () => dialog.showModal());
+    dialog.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => dialog.close()));
+    // Click on the backdrop closes it.
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => fab.focus({ preventScroll: true }));
+  }
+</script>

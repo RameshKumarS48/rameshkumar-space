@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import WritingLayout from "../../layouts/WritingLayout.astro";
 import WritingVisual from "../../components/WritingVisual.astro";
+import TldrSheet from "../../components/TldrSheet.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("writing");
@@ -98,6 +99,9 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
       </aside>
     )}
   </article>
+  {!isDraft && (d.tldr.length > 0 || d.steps.length > 0) && (
+    <TldrSheet title={d.title} company={d.company} stats={d.stats} steps={d.steps} tldr={d.tldr} />
+  )}
 </WritingLayout>
 
 <style>

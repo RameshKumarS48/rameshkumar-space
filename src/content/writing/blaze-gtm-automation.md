@@ -15,6 +15,14 @@ stats:
   - { value: "8%", label: "Avg reply rate, top 3 ICPs" }
   - { value: "4%", label: "Of all outreach booked a call" }
   - { value: "50K+", label: "Leads reached" }
+steps:
+  - "Define 7 ICPs"
+  - "Pain points + positioning"
+  - "Fetch leads: Clay + Apollo"
+  - "Campaigns: Instantly + LinkedIn Helper"
+  - "7-day personalised sequence"
+  - "Claude handles replies"
+  - "Daily dashboard → double down"
 tldr:
   - "7 ICPs, 3,000 leads each, all run from one Claude-based system wired into Clay, Apollo, Instantly and LinkedIn Helper."
   - "Every email personalised over a 7-day sequence, with Claude writing the replies (human-checked for the first month)."
