@@ -3,6 +3,11 @@ title: "How I built the entire GTM automation engine for Blaze Money (YC W24)"
 dek: "7 ICPs, 50,000+ leads, and one Claude-powered system that found, wrote, replied and reported. It booked calls with 4% of everyone we reached out to."
 company: "Blaze Money"
 companyUrl: "https://blaze.money"
+brand:
+  logo: "/writing/brand/blaze.svg"
+  width: 110
+  color: "#0C0C18"
+  blurb: "YC W24. Building an AI CFO for small and medium businesses."
 role: "GTM automation, end to end"
 date: 2026-11-11
 readTime: "7 min read"

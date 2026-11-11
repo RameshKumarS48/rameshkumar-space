@@ -3,6 +3,11 @@ title: "How we built stablecoin remittance rails at Aspora"
 dek: "Back when Aspora was Vance: UK to India over USDC and USDT, a 7% stablecoin premium, fully compliant rails built around it, and $1M in monthly gross profit."
 company: "Aspora"
 companyUrl: "https://aspora.com"
+brand:
+  logo: "/writing/brand/aspora.png"
+  width: 104
+  color: "#5523B2"
+  blurb: "Formerly Vance. Cross-border remittances to India."
 role: "Early team · Stablecoin (VDA) rails"
 date: 2026-11-11
 readTime: "6 min read"
