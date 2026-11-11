@@ -8,6 +8,7 @@ brand:
   width: 110
   color: "#0C0C18"
   blurb: "YC W24. Building an AI CFO for small and medium businesses."
+  theme: { accent: "#0A0A0A", accent2: "#FAF000", fill: "#FAF000", onFill: "#0A0A0A", tint: "#FFFBD1" }
 role: "GTM automation, end to end"
 date: 2026-11-11
 readTime: "7 min read"
@@ -55,15 +56,15 @@ That was the main goal. So I started building the machine that would sell it.
 .f1-k{font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.14em;fill:#888898}
 .f1-h{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;fill:#0C0C18;letter-spacing:-.02em}
 .f1-card{fill:#fff;stroke:#DFDFE8;stroke-width:2}
-.f1-card.hl{stroke:#4338CA}
-.f1-n{fill:#4338CA}
-.f1-nt{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;fill:#fff;text-anchor:middle}
+.f1-card.hl{stroke:#0A0A0A}
+.f1-n{fill:#FAF000;stroke:#0A0A0A;stroke-width:2}
+.f1-nt{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;fill:#0A0A0A;text-anchor:middle}
 .f1-t{font-family:'Syne',sans-serif;font-size:29px;font-weight:800;fill:#0C0C18;letter-spacing:-.01em}
 .f1-s{font-family:'Syne',sans-serif;font-size:22px;fill:#3A3A52}
-.f1-c{stroke:#4338CA;stroke-width:3}
-.f1-loop{fill:none;stroke:#4338CA;stroke-width:3;stroke-dasharray:8 8}
-.f1-ll{font-family:'JetBrains Mono',monospace;font-size:17px;letter-spacing:.08em;fill:#4338CA;text-anchor:middle}
-.f1-tag{font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.1em;fill:#4338CA}
+.f1-c{stroke:#0A0A0A;stroke-width:3}
+.f1-loop{fill:none;stroke:#0A0A0A;stroke-width:3;stroke-dasharray:8 8}
+.f1-ll{font-family:'JetBrains Mono',monospace;font-size:17px;letter-spacing:.08em;fill:#0A0A0A;text-anchor:middle}
+.f1-tag{font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.1em;fill:#0A0A0A}
 </style>
 <rect width="900" height="1110" fill="#F5F5F3"/>
 <text x="40" y="54" class="f1-k">THE BLAZE GTM ENGINE</text>
@@ -103,7 +104,7 @@ That was the main goal. So I started building the machine that would sell it.
 <text x="150" y="50" class="f1-t">Daily dashboard</text><text x="150" y="88" class="f1-s">Interested, maybe, or a clear no, per ICP</text>
 </g>
 <path d="M780 1003 H846 V467 H792" class="f1-loop"/>
-<path d="M800 457 L782 467 L800 477" fill="none" stroke="#4338CA" stroke-width="3"/>
+<path d="M800 457 L782 467 L800 477" fill="none" stroke="#0A0A0A" stroke-width="3"/>
 <text transform="translate(872,735) rotate(-90)" class="f1-ll">TOP 3 ICPs × 10,000</text>
 <text x="780" y="1094" class="f1-tag" text-anchor="end">STEPS 3–7 RUN FROM ONE CLAUDE DASHBOARD</text>
 </svg>
@@ -218,16 +219,16 @@ Out of the people who replied, we booked calls with about half. That's roughly *
 <style>
 .f2-k{font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.14em;fill:#888898}
 .f2-h{font-family:'Syne',sans-serif;font-size:38px;font-weight:800;fill:#0C0C18;letter-spacing:-.02em}
-.f2-a{fill:#4338CA}
-.f2-b{fill:#B9B6EE}
+.f2-a{fill:#FAF000;stroke:#0A0A0A;stroke-width:2}
+.f2-b{fill:#DEDEDB}
 .f2-base{stroke:#C2C2D8;stroke-width:2}
 .f2-tot{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;fill:#0C0C18;text-anchor:middle}
 .f2-gl{font-family:'JetBrains Mono',monospace;font-size:17px;letter-spacing:.06em;fill:#3A3A52;text-anchor:middle}
 .f2-num{font-family:'Syne',sans-serif;font-size:54px;font-weight:800;fill:#0C0C18}
-.f2-ap{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:40px;fill:#4338CA}
+.f2-ap{font-family:'JetBrains Mono',monospace;font-weight:400;font-size:40px;fill:#0A0A0A}
 .f2-lab{font-family:'Syne',sans-serif;font-size:25px;fill:#3A3A52}
-.f2-arr{stroke:#4338CA;stroke-width:3;fill:none}
-.f2-call{fill:#fff;stroke:#4338CA;stroke-width:2}
+.f2-arr{stroke:#0A0A0A;stroke-width:3;fill:none}
+.f2-call{fill:#FFFBD1;stroke:#0A0A0A;stroke-width:2}
 .f2-ct{font-family:'Syne',sans-serif;font-size:24px;fill:#0C0C18}
 </style>
 <rect width="900" height="1010" fill="#F5F5F3"/>

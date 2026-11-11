@@ -8,6 +8,7 @@ brand:
   width: 104
   color: "#5523B2"
   blurb: "Formerly Vance. Cross-border remittances to India."
+  theme: { accent: "#5523B2", accent2: "#7E3CF3", fill: "#5523B2", onFill: "#FFFFFF", tint: "#EAE6FF" }
 role: "Early team · Stablecoin (VDA) rails"
 date: 2026-11-11
 readTime: "6 min read"
@@ -101,11 +102,11 @@ Then a lot of unusual use cases turned up that we weren't prepared for. So we ke
 .a1-es{font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.08em;fill:rgba(255,255,255,.65);text-anchor:middle}
 .a1-lane{font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.14em}
 .a1-box{fill:#fff;stroke:#DFDFE8;stroke-width:2}
-.a1-box.v{stroke:#4338CA}
+.a1-box.v{stroke:#5523B2}
 .a1-t{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;fill:#0C0C18}
 .a1-s{font-family:'Syne',sans-serif;font-size:19px;fill:#3A3A52}
 .a1-c{stroke:#C2C2D8;stroke-width:3}
-.a1-c.v{stroke:#4338CA}
+.a1-c.v{stroke:#5523B2}
 </style>
 <rect width="900" height="1120" fill="#F5F5F3"/>
 <text x="40" y="54" class="a1-k">TWO WAYS TO SEND £1,000 HOME</text>
@@ -115,7 +116,7 @@ Then a lot of unusual use cases turned up that we weren't prepared for. So we ke
 <text x="450" y="210" class="a1-es">PAYS IN GBP / AED</text>
 <line x1="235" y1="270" x2="235" y2="300" class="a1-c"/><line x1="665" y1="270" x2="665" y2="300" class="a1-c v"/>
 <text x="40" y="258" class="a1-lane" fill="#888898">TRADITIONAL RAILS</text>
-<text x="470" y="258" class="a1-lane" fill="#4338CA">VDA RAILS</text>
+<text x="470" y="258" class="a1-lane" fill="#5523B2">VDA RAILS</text>
 <rect x="40" y="300" width="390" height="130" rx="8" class="a1-box"/><text x="64" y="354" class="a1-t">Truelayer collects</text><text x="64" y="394" class="a1-s">into Thunes' UK bank account</text>
 <rect x="470" y="300" width="390" height="130" rx="8" class="a1-box v"/><text x="494" y="354" class="a1-t">Truelayer collects</text><text x="494" y="394" class="a1-s">sent to the on-ramp partner</text>
 <line x1="235" y1="430" x2="235" y2="470" class="a1-c"/><line x1="665" y1="430" x2="665" y2="470" class="a1-c v"/>
@@ -152,8 +153,8 @@ By the latest month, we made **$1 million in gross profit**, just from VDA rails
 .a2-h{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;fill:#0C0C18;letter-spacing:-.02em}
 .a2-l{font-family:'Syne',sans-serif;font-size:22px;fill:#3A3A52}
 .a2-v{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;fill:#0C0C18}
-.a2-a{fill:#4338CA}
-.a2-b{fill:#B9B6EE}
+.a2-a{fill:#5523B2}
+.a2-b{fill:#CAC0FF}
 .a2-n{fill:#DFDFE8}
 .a2-in{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;fill:#fff}
 .a2-ind{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;fill:#0C0C18}

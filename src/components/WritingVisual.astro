@@ -104,11 +104,11 @@ const { kind, size = "card" } = Astro.props;
   }
   .wv :global(.wv-node rect),
   .wv :global(.wv-node circle) { fill: var(--bg-card); stroke: var(--border-strong); stroke-width: 1.5; }
-  .wv :global(.wv-node-accent rect) { fill: var(--accent); stroke: var(--accent); }
+  .wv :global(.wv-node-accent rect) { fill: var(--brand-fill, var(--accent)); stroke: var(--accent); }
   .wv :global(.wv-fill) { fill: var(--accent) !important; stroke: none !important; }
-  .wv :global(.wv-fill-soft) { fill: var(--accent2) !important; stroke: none !important; opacity: .35; }
+  .wv :global(.wv-fill-soft) { fill: var(--brand-tint, #ECECF8) !important; stroke: var(--accent) !important; stroke-width: 1 !important; }
   .wv :global(.wv-stroke) { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; }
-  .wv :global(.wv-stroke-inv) { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .wv :global(.wv-stroke-inv) { fill: none; stroke: var(--on-brand-fill, #fff); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
   .wv :global(.wv-chip rect) { fill: var(--bg-card); stroke: var(--accent); stroke-width: 1.5; }
   .wv :global(.wv-chip text),
   .wv :global(.wv-label),

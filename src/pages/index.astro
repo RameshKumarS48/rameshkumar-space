@@ -3,6 +3,7 @@ import { products, type ProductMeta } from "../data/products";
 import { getCollection } from "astro:content";
 import WritingVisual from "../components/WritingVisual.astro";
 import { inProgress } from "../data/inProgress";
+import { themeVars } from "../lib/brandTheme";
 import "../styles/global.css";
 
 const posts = (await getCollection("writing")).sort((a, b) => a.data.order - b.data.order);
@@ -698,7 +699,8 @@ const totalCount = cards.length;
     }
     .spot::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      background: var(--brand-fill, var(--accent));
+      height: 4px;
     }
     .spot:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
     .writing-meta {
@@ -706,11 +708,11 @@ const totalCount = cards.length;
       font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
       text-transform: uppercase; color: var(--ink-muted);
     }
-    .spot-tag { background: var(--accent); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 10px; letter-spacing: .1em; }
+    .spot-tag { background: var(--brand-fill, var(--accent)); color: var(--on-brand-fill, #fff); box-shadow: inset 0 0 0 1px var(--accent); padding: 4px 10px; border-radius: 999px; font-size: 10px; letter-spacing: .1em; }
     .spot-title { font-size: clamp(28px, 3.4vw, 46px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; margin-bottom: 18px; }
     .spot-dek {
       font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(18px, 1.8vw, 22px);
-      line-height: 1.45; color: var(--ink-soft); border-left: 2px solid var(--accent); padding-left: 16px; max-width: 560px;
+      line-height: 1.45; color: var(--ink-soft); border-left: 3px solid var(--brand-fill, var(--accent)); padding-left: 16px; max-width: 560px;
     }
     .spot-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
     .spot-stat-num { display: block; font-size: clamp(24px, 2.4vw, 32px); font-weight: 800; line-height: 1; }
@@ -723,7 +725,9 @@ const totalCount = cards.length;
       background: var(--ink); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .04em;
       transition: background .2s, gap .2s;
     }
-    .spot:hover .spot-cta { background: var(--accent); gap: 14px; }
+    .spot:hover .spot-cta { background: var(--brand-fill, var(--accent)); color: var(--on-brand-fill, #fff); gap: 14px; }
+    .co-logo { display: block; height: 18px; width: auto; }
+    .more-co .co-logo { height: 16px; }
     .spot-visual { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 12px; }
 
     .more-row {
@@ -731,7 +735,7 @@ const totalCount = cards.length;
       margin-top: 12px; padding: 20px 28px; background: var(--bg-card); border: 1px solid var(--border);
       border-radius: 4px; text-decoration: none; color: inherit; transition: border-color .2s;
     }
-    .more-row:hover { border-color: var(--border-strong); }
+    .more-row:hover { border-color: var(--accent); box-shadow: inset 4px 0 0 var(--brand-fill, var(--accent)); }
     .more-co { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
     .more-title { font-size: 17px; font-weight: 700; }
     .more-arrow { color: var(--ink-muted); }
@@ -950,11 +954,11 @@ const totalCount = cards.length;
         <a href="/writing" class="writing-all">All writing <span>→</span></a>
       </div>
 
-      <a href={`/writing/${spotlight.id}`} class="spot reveal">
+      <a href={`/writing/${spotlight.id}`} class="spot reveal" style={themeVars(spotlight.data.brand?.theme)}>
         <div class="spot-body">
           <div class="writing-meta">
             <span class="spot-tag">{spotlight.data.status === "published" ? "New" : "Writing now"}</span>
-            <span>{spotlight.data.company}</span>
+            {spotlight.data.brand ? <img src={spotlight.data.brand.logo} alt={spotlight.data.company} height="18" class="co-logo" /> : <span>{spotlight.data.company}</span>}
             {spotlight.data.readTime && <><span>·</span><span>{spotlight.data.readTime}</span></>}
           </div>
           <h3 class="spot-title">{spotlight.data.title}</h3>
@@ -972,8 +976,8 @@ const totalCount = cards.length;
       </a>
 
       {morePosts.map(p => (
-        <a href={`/writing/${p.id}`} class="more-row reveal">
-          <span class="more-co">{p.data.company}</span>
+        <a href={`/writing/${p.id}`} class="more-row reveal" style={themeVars(p.data.brand?.theme)}>
+          <span class="more-co">{p.data.brand ? <img src={p.data.brand.logo} alt={p.data.company} height="16" class="co-logo" /> : p.data.company}</span>
           <span class="more-title">{p.data.title}</span>
           {p.data.status === "draft" ? <span class="card-badge badge-beta">Writing now</span> : <span class="more-arrow">→</span>}
         </a>

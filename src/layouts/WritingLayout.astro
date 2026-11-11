@@ -1,8 +1,8 @@
 ---
 import "../styles/global.css";
 
-interface Props { title: string; description: string; canonicalPath: string; type?: "website" | "article"; }
-const { title, description, canonicalPath, type = "website" } = Astro.props;
+interface Props { title: string; description: string; canonicalPath: string; type?: "website" | "article"; themeStyle?: string; }
+const { title, description, canonicalPath, type = "website", themeStyle } = Astro.props;
 const canonical = new URL(canonicalPath, "https://rameshkumar.space").href;
 const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
 ---
@@ -30,6 +30,7 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
       --bg: #F5F5F3; --bg-card: #FFFFFF; --bg-hover: #ECECF8;
       --ink: #0C0C18; --ink-soft: #3A3A52; --ink-muted: #888898;
       --accent: #4338CA; --accent2: #6366F1;
+      --brand-fill: #4338CA; --on-brand-fill: #FFFFFF; --brand-tint: #ECECF8;
       --border: #DFDFE8; --border-strong: #C2C2D8;
       --shadow-lg: 0 8px 40px rgba(12,12,24,.12);
     }
@@ -39,6 +40,9 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
       font-family: 'Syne', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
     a { color: inherit; }
+    ::selection { background: var(--brand-tint); color: var(--ink); }
+    /* brand stripe under the nav on company-themed pages */
+    body.themed .w-nav { box-shadow: inset 0 -3px 0 var(--brand-fill); border-bottom-color: transparent; }
 
     .w-nav {
       position: sticky; top: 0; z-index: 100;
@@ -76,7 +80,7 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
     }
   </style>
 </head>
-<body>
+<body style={themeStyle} class={themeStyle ? "themed" : undefined}>
   <nav class="w-nav">
     <a href="/" class="w-nav-logo">rameshkumar.space</a>
     <div class="w-nav-links">

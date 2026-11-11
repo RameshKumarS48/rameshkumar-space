@@ -81,14 +81,13 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
   }
   .tl-fab[hidden] { display: none; }
   .tl-fab.show { transform: translate(-50%, 0); opacity: 1; }
-  .tl-fab:hover { background: var(--accent); }
+  .tl-fab.show:hover { transform: translate(-50%, -2px); }
   .tl-fab:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
   .tl-fab-icon {
-    width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+    width: 32px; height: 32px; border-radius: 50%; background: var(--brand-fill, var(--accent));
     display: grid; place-items: center; flex-shrink: 0; transition: background .2s;
   }
-  .tl-fab:hover .tl-fab-icon { background: var(--ink); }
-  .tl-fab-icon svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; }
+    .tl-fab-icon svg { width: 16px; height: 16px; fill: none; stroke: var(--on-brand-fill, #fff); stroke-width: 1.8; stroke-linecap: round; }
   .tl-fab-text b { font-weight: 800; letter-spacing: .02em; }
   .tl-fab-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .04em; color: rgba(255,255,255,.6); margin-left: 6px; }
 
@@ -130,9 +129,9 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
     position: relative; display: flex; flex-direction: column; gap: 8px;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 12px;
   }
-  .tl-step:nth-child(n+3) { border-color: var(--accent2); }
+  .tl-step:nth-child(n+3) { border-color: var(--accent); }
   .tl-step-n {
-    width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff;
+    width: 22px; height: 22px; border-radius: 50%; background: var(--brand-fill, var(--accent)); color: var(--on-brand-fill, #fff); box-shadow: 0 0 0 1px var(--accent);
     display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px;
   }
   .tl-step-t { font-size: 13px; font-weight: 700; line-height: 1.3; }
@@ -149,7 +148,7 @@ const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
   }
   .tl-btn:hover { border-color: var(--accent); color: var(--accent); }
   .tl-btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
-  .tl-btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tl-btn-primary:hover { background: var(--brand-fill, var(--accent)); border-color: var(--accent); color: var(--on-brand-fill, #fff); }
 
   @media (max-width: 600px) {
     .tl-fab { bottom: 16px; }

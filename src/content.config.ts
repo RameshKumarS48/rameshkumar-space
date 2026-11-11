@@ -10,7 +10,10 @@ const writing = defineCollection({
     dek: z.string(),
     company: z.string(),
     companyUrl: z.string().url().optional(),
-    brand: z.object({ logo: z.string(), width: z.number(), color: z.string(), blurb: z.string() }).optional(),
+    brand: z.object({
+      logo: z.string(), width: z.number(), color: z.string(), blurb: z.string(),
+      theme: z.object({ accent: z.string(), accent2: z.string(), fill: z.string(), onFill: z.string(), tint: z.string() }),
+    }).optional(),
     role: z.string(),
     period: z.string().optional(),
     date: z.coerce.date(),

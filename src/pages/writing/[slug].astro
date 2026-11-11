@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import WritingLayout from "../../layouts/WritingLayout.astro";
 import WritingVisual from "../../components/WritingVisual.astro";
 import TldrSheet from "../../components/TldrSheet.astro";
+import { themeVars } from "../../lib/brandTheme";
 
 export async function getStaticPaths() {
   const posts = await getCollection("writing");
@@ -20,17 +21,18 @@ const others = (await getCollection("writing"))
 
 const dateLabel = d.date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 const LINKEDIN = "https://linkedin.com/in/ramesh-kumar-saragadam-9b2617142";
+const themeStyle = d.brand ? themeVars(d.brand.theme) : undefined;
 const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "") : "";
 ---
 
-<WritingLayout title={`${d.title} — Ramesh Kumar Saragadam`} description={d.dek} canonicalPath={`/writing/${post.id}`} type="article">
+<WritingLayout title={`${d.title} — Ramesh Kumar Saragadam`} description={d.dek} canonicalPath={`/writing/${post.id}`} type="article" themeStyle={themeStyle}>
   <article>
     <!-- HERO -->
     <header class="ah">
       <div class="ah-inner">
         <a href="/writing" class="ah-back">← All writing</a>
         {d.brand && d.companyUrl && (
-          <a href={d.companyUrl} target="_blank" rel="noopener noreferrer" class="brand-chip" style={`--brand:${d.brand.color}`} aria-label={`${d.company} website (${host})`}>
+          <a href={d.companyUrl} target="_blank" rel="noopener noreferrer" class="brand-chip"  aria-label={`${d.company} website (${host})`}>
             <img src={d.brand.logo} alt={d.company} width={d.brand.width} height="22" class="brand-logo" />
             <span class="brand-div" aria-hidden="true"></span>
             <span class="brand-host">{host} <span aria-hidden="true">↗</span></span>
@@ -84,7 +86,7 @@ const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "")
     )}
 
     {d.brand && d.companyUrl && !isDraft && (
-      <section class="brand-card" style={`--brand:${d.brand.color}`}>
+      <section class="brand-card" >
         <img src={d.brand.logo} alt={d.company} width={d.brand.width * 1.2} height="26" class="brand-logo" />
         <p class="brand-blurb">{d.brand.blurb}</p>
         <a href={d.companyUrl} target="_blank" rel="noopener noreferrer" class="btn">Visit {host} ↗</a>
@@ -132,17 +134,17 @@ const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "")
   /* ── COMPANY BRANDING ── */
   .brand-chip {
     display: flex; width: fit-content; align-items: center; gap: 14px; margin-bottom: 24px;
-    padding: 10px 16px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--brand);
+    padding: 10px 16px; background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--brand-fill);
     border-radius: 4px; text-decoration: none; color: var(--ink-muted); transition: border-color .2s, box-shadow .2s;
   }
-  .brand-chip:hover { border-color: var(--brand); box-shadow: 0 6px 24px rgba(12,12,24,.08); }
+  .brand-chip:hover { border-color: var(--accent); box-shadow: 0 6px 24px rgba(12,12,24,.08); }
   .brand-logo { display: block; height: 22px; width: auto; }
   .brand-div { width: 1px; height: 18px; background: var(--border-strong); }
   .brand-host { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .02em; white-space: nowrap; }
-  .brand-chip:hover .brand-host { color: var(--brand); }
+  .brand-chip:hover .brand-host { color: var(--accent); }
   .brand-card {
     max-width: 672px; margin: 72px auto 0; padding: 28px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px;
-    background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--brand); border-radius: 4px;
+    background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--brand-fill); border-radius: 4px;
   }
   .brand-card .brand-logo { height: 26px; }
   .brand-blurb { font-size: 15px; line-height: 1.5; color: var(--ink-soft); margin: 0; }
@@ -152,13 +154,13 @@ const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "")
     font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
   }
   .ah-eyebrow a { text-decoration: none; border-bottom: 1px solid currentColor; }
-  .ah-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .ah-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-fill); box-shadow: 0 0 0 1px var(--accent); }
   .ah-sep { color: var(--ink-muted); }
   .ah-title { font-size: clamp(34px, 4.4vw, 60px); font-weight: 800; letter-spacing: -.03em; line-height: 1; overflow-wrap: break-word; }
   .ah-dek {
     margin-top: 28px; max-width: 620px;
     font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.45; color: var(--ink-soft);
-    border-left: 2px solid var(--accent); padding-left: 18px;
+    border-left: 3px solid var(--brand-fill); padding-left: 18px;
   }
   .ah-meta {
     margin-top: 32px; display: flex; flex-wrap: wrap; gap: 10px;
@@ -191,7 +193,7 @@ const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "")
   }
   .btn:hover { border-color: var(--accent); color: var(--accent); }
   .btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--brand-fill); border-color: var(--accent); color: var(--on-brand-fill); }
 
   .next { margin-top: 80px; }
   .next-item {
@@ -210,7 +212,8 @@ const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "")
   .prose :global(h2) { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; color: var(--ink); margin-top: 2.2em; }
   .prose :global(h3) { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-top: 1.8em; }
   .prose :global(strong) { color: var(--ink); font-weight: 600; }
-  .prose :global(a) { color: var(--accent); text-underline-offset: 3px; }
+  .prose :global(a) { color: var(--accent); text-underline-offset: 3px; text-decoration-color: var(--brand-fill); text-decoration-thickness: 2px; }
+  .prose :global(a:hover) { background: var(--brand-tint); }
   .prose :global(ul), .prose :global(ol) { padding-left: 1.3em; }
   .prose :global(li + li) { margin-top: .4em; }
   .prose :global(li::marker) { color: var(--accent); }
@@ -235,7 +238,7 @@ const host = d.companyUrl ? new URL(d.companyUrl).hostname.replace(/^www\./, "")
   .prose :global(figcaption) { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .04em; color: var(--ink-muted); text-align: center; }
 
   /* <div class="callout">…</div> */
-  .prose :global(.callout) { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 20px 24px; font-size: 17px; }
+  .prose :global(.callout) { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--brand-fill); border-radius: 4px; padding: 20px 24px; font-size: 17px; }
 
   /* <div class="metrics"><div><b>10x</b><span>leads/week</span></div>…</div> */
   .prose :global(.metrics) { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 2em 0; }
